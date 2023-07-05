@@ -1,28 +1,31 @@
-const { Recipe } = require('../db')
+const { Recipe, Diets } = require('../db')
 const { Op } = require('sequelize')
 const axios = require('axios')
-
+const { API_KEY } = process.env
+// https://api.spoonacular.com/recipes/716426/information?apiKey=e45669b75f90489f96c7ea1cca2fe8d7
 //----------------------------------RecipeById----------------------------------------------------------
-// hecho!
-const getRecipeById = async (idRecipe, source) => {
-    const recipe = source === "api" ? axios.get(`https://run.mocky.io/v3/84b3f19c-7642-4552-b69c-c53742badee5/${idRecipe}`)
+const URL = 'https://api.spoonacular.com/recipes'
+
+const getRecipeById = async (parsedId, source) => {
+    
+    const recipe = source === "api" ? await axios.get(`${URL}/${parsedId}/information?apiKey=${API_KEY}`) 
     .then((response) => {
         const data = response.data;
-        const diets = data.diets.join(' - ');
-        const summary = data.summary.replace(/<[^>]+>/g, "");
-        const steps = data.steps.replace(/<[^>]+>/g, "");
+        const diets = data.diets ? data.diets.join(' - ') : '';
+        const summary = data.summary ? data.summary.replace(/<[^>]+>/g, "") : '';
+        const instructions = data.instructions ? data.instructions.replace(/<[^>]+>/g, "") : '';
         const result = {
             id: data.id,
             title: data.title,
             image: data.image,
             summary: summary,
             healthScore: data.healthScore,
-            steps: steps,
+            steps: instructions,
             diets: diets,
         };
         return result;
     })
-: await Recipe.findByPk(idRecipe);
+: await Recipe.findByPk(parsedId);
     return recipe;
 };
 
@@ -32,7 +35,13 @@ const getRecipeById = async (idRecipe, source) => {
 const getRecipeByName = async (name) => {
    const nameByDb = await Recipe.findAll({
     where: { 
-        title: { [Op.iLike]: name }
+        title: { [Op.iLike]: name },
+     },
+     includes: {
+        model: Diets,
+        as: "dietAssociations",
+        attributes: ["name"],
+        through: { attributes: [] }
      },
    });
    const nameByApi = await axios.get('https://run.mocky.io/v3/84b3f19c-7642-4552-b69c-c53742badee5')

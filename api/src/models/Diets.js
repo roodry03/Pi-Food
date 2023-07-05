@@ -4,9 +4,9 @@ module.exports = (sequelize) => {
     // defino el modelo
     sequelize.define('diets', {
         id: {
-          type: DataTypes.UUID,
+          type: DataTypes.INTEGER,
           primaryKey: true,
-          defautValue: DataTypes.UUIDV4,
+          autoIncrement: true,
         },
       name: {
         type: DataTypes.STRING,

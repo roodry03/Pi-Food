@@ -26,9 +26,11 @@ const { getRecipeByName, getAll, getRecipeById, createRecipe } = require('../con
 
 const getByIdHandlers = async (req, res) => {
     const { idRecipe } = req.params;
+    console.log("PARAMS", req.params);
     try {
+        const parsedId = Number.parseInt(idRecipe);
         const source = isNaN(idRecipe) ? "db" : "api";
-        const response = await getRecipeById(idRecipe, source);
+        const response = await getRecipeById(parsedId, source);
         res.status(200).json(response);
     } catch (error) {
         res.status(400).json({error: error.message});

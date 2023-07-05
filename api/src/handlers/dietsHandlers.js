@@ -1,10 +1,11 @@
 const { Diets } = require('../db')
 const axios = require('axios')
+const { API_KEY } = process.env
 
-
+const URL = "https://api.spoonacular.com/recipes"
 const getDietsHandlers = async (req, res) => {
     try {
-        await axios.get('https://run.mocky.io/v3/84b3f19c-7642-4552-b69c-c53742badee5')
+        await axios.get(`${URL}/complexSearch?addRecipeInformation=true&number=100&apiKey=${API_KEY}`)
         .then(async (response) => {
             const array1 = [];
             const array2 = [];
@@ -32,3 +33,14 @@ const getDietsHandlers = async (req, res) => {
 };
 
 module.exports = { getDietsHandlers }
+
+// const getDietsHandlers = async (req, res) => {
+//     try {
+//         const allDiets = await getDiets();
+
+//         return res.status(200).json(allDiets);
+        
+//     } catch (error) {
+//         res.status(400).json({ error: error.message })
+//     }
+// };
