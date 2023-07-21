@@ -4,32 +4,38 @@ const { API_KEY } = process.env
 
 const URL = "https://api.spoonacular.com/recipes"
 const getDietsHandlers = async (req, res) => {
-    try {
-        await axios.get(`${URL}/complexSearch?addRecipeInformation=true&number=100&apiKey=${API_KEY}`)
-        .then(async (response) => {
-            const array1 = [];
-            const array2 = [];
-            const data = response.data.results;
-            data.map(async (ele) => {
-                if(ele.diets && ele.diets.length > 0) {
-                    const arrToString = ele.diets.toString();
-                    array1.push(arrToString);
-                }
-            });
-            array1.join().split(',').filter((ele) => {
-                if(!array2.includes(ele)) array2.push(ele);
-            });
-            console.log(array2);
-            array2.map(async (ele) => {
-                const newDiet = await Diets.create({ name: ele });
-                console.log(newDiet);
-            });
-            res.status(200).json(array2);
-        })
-        
-    } catch (error) {
-        res.status(400).json({ error: error.message })
-    }
+    await axios
+    .get(
+      `${URL}/complexSearch?addRecipeInformation=true&number=100&apiKey=${API_KEY}`
+    )
+    .then(async (response) => {
+      const arrToStr = [];
+      const dietsFiltered = [];
+      const arrDiets = [];
+      const data = await response.data.results;
+      data.map(async (element) => {
+        if (element.diets && element.diets.length > 0) {
+          const arrToString = element.diets.toString();
+          arrToStr.push(arrToString);
+        }
+      });
+      arrToStr
+        .join()
+        .split(",")
+        .filter((element) => {
+          if (!dietsFiltered.includes(element)) dietsFiltered.push(element);
+        });
+
+      dietsFiltered.map(async (element) => {
+        const newDiet = await Diets.create({ name: element });
+        arrDiets.push(newDiet);
+      });
+
+      res.status(200).json(dietsFiltered);
+    })
+    .catch(function (error) {
+      res.status(400).json({ error: error.message });
+    });
 };
 
 module.exports = { getDietsHandlers }

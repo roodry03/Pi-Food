@@ -6,14 +6,14 @@ const { API_KEY } = process.env
 //----------------------------------RecipeById----------------------------------------------------------
 const URL = 'https://api.spoonacular.com/recipes'
 
-const getRecipeById = async (parsedId, source) => {
+const getRecipeById = async (idRecipe, source) => {
     
-    const recipe = source === "api" ? await axios.get(`${URL}/${parsedId}/information?apiKey=${API_KEY}`) 
+    const recipe = source === "api" ? await axios.get(`${URL}/${idRecipe}/information?apiKey=${API_KEY}`) 
     .then((response) => {
         const data = response.data;
-        const diets = data.diets ? data.diets.join(' - ') : '';
-        const summary = data.summary ? data.summary.replace(/<[^>]+>/g, "") : '';
-        const instructions = data.instructions ? data.instructions.replace(/<[^>]+>/g, "") : '';
+        const diets = data.diets.join(' - ');
+        const summary = data.summary.replace(/<[^>]+>/g, "");
+        const instructions = data.instructions.replace(/<[^>]+>/g, "");
         const result = {
             id: data.id,
             title: data.title,
@@ -25,7 +25,7 @@ const getRecipeById = async (parsedId, source) => {
         };
         return result;
     })
-: await Recipe.findByPk(parsedId);
+: await Recipe.findByPk(idRecipe);
     return recipe;
 };
 
@@ -98,18 +98,31 @@ const getAll = async () => {
 
 //----------------------------------CreateRecipe----------------------------------------------------------
 //create recipe hecho!
-const createRecipe = async (title, image, summary, healthScore, steps, Diets) => {
-    const newRecipe = await Recipe.create({ 
-        title, 
-        image, 
-        summary, 
-        healthScore, 
-        steps,
-        Diets })
+const createRecipe = async (
+    title,
+    image,
+    summary,
+    healthScore,
+    steps,
+    diets
+  ) => {
+    const newRecipe = await Recipe.create({
+      title,
+      image,
+      summary,
+      healthScore,
+      steps,
+      diets,
+    });
+  
+    for (const diet of diets) {
+      const newModel = await Diets.findOne({ where: { name: diet } });
+      await newRecipe.addDietAssociations(newModel);
+    }
+  
+    return newRecipe;
+  };
 
-        return newRecipe;
-    
-};
 
 module.exports = {
     getRecipeByName,

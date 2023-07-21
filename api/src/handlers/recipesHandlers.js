@@ -28,9 +28,8 @@ const getByIdHandlers = async (req, res) => {
     const { idRecipe } = req.params;
     console.log("PARAMS", req.params);
     try {
-        const parsedId = Number.parseInt(idRecipe);
         const source = isNaN(idRecipe) ? "db" : "api";
-        const response = await getRecipeById(parsedId, source);
+        const response = await getRecipeById(idRecipe, source);
         res.status(200).json(response);
     } catch (error) {
         res.status(400).json({error: error.message});
@@ -63,16 +62,24 @@ const getByNameHandlers = async (req, res) => {
 
 
 const createRecipes = async (req, res) => {
-    const { title, image, summary, healthScore, steps, Diets} = req.body;
-
-   try {
-    const response = await createRecipe(title, image, summary, healthScore, steps, Diets);
-    //201 se utiliza para indicar que esta todo bien y que hay un nuevo elemento creado.
-    res.status(201).json(response); 
-   } catch (error) {
-    res.status(400).json({ error: error.message });
-   }
-};
+  const { title, image, summary, healthScore, steps, diets } =
+    req.body;
+    try {
+      const response = await createRecipe(
+        title,
+        image,
+        summary,
+        healthScore,
+        steps,
+        diets
+      );
+      res.status(200).json(response);
+    } catch (error) {
+      res
+        .status(400)
+        .json({ error: "Todos lo campos deben llenarse de forma obligatoria"});
+    }
+  };
 
 module.exports = {
     getByNameHandlers,

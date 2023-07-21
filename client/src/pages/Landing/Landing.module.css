@@ -1,0 +1,83 @@
+.contenedor1 {
+    width: 300px; 
+    height: 300px; 
+    background-image: url(../../images/obia_0mpt_210608.jpg); 
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    
+    
+}
+
+.contenedor {
+    background-image: url(../../images/519.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+   
+    
+    
+}
+
+
+.contenedor1 h1 {
+    text-align: center;
+    color: rgba(0, 0, 0, 0.514);
+    background-color: #ffffff77;
+    text-shadow:
+      0 0 12px #00000096, 
+      0 0 12px rgba(0, 0, 0, 0.623); 
+    width: 200px;
+    height: 50px;
+    border-radius: 30px;
+   
+}
+
+.home {
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    
+   
+}
+
+.home button {
+   
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #ffffff8c;
+    color: #0000009c;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    text-shadow: 2px 2px 4px;
+    transform: translateY(0);
+    transition: transform 150ms, box-shadow 150ms;
+
+}
+
+.home button:hover {
+    box-shadow: rgba(0, 0, 0, .15) 0 3px 9px 0;
+    transform: translateY(-2px);
+    background-color:  #ffffff8c;
+    font-size: 20px;
+    box-shadow: rgb(0, 0, 0) 0 3px 9px 0;
+    
+  
+}
+
+@media (min-width: 768px) {
+    .contenedor button {
+       padding: 10px 10px;
+     }
+   }

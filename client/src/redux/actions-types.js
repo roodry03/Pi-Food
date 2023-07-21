@@ -1,0 +1,8 @@
+export const GET_RECIPES = "GET_RECIPES"
+export const GET_BY_NAME = "GET_BY_NAME"
+export const FILTER = "FILTER"
+export const ORDER_H = "ORDER_H"
+export const ORDER_T = "ORDER_T"
+export const POST_RECIPE = "POST_RECIPE"
+export const PAGINATE= "PAGINATE"
+export const DETAIL = "DETAIL"
